@@ -24,6 +24,11 @@ class Listing extends Model
         'image' => 'nullable|string'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function setImageAttribute($image)
 {
     if (is_string($image)) {

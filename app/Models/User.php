@@ -13,6 +13,14 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
+     * The name of the column containing the token value.
+     *
+     * @var string
+     */
+    protected $tokenName = 'access_token';
+
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -32,6 +40,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function listings()
+    {
+        return $this->hasMany(Listing::class);
+    }
 
     /**
      * The attributes that should be cast.
