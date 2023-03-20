@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ListingController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +17,24 @@ use App\Http\Controllers\ListingController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/users', [UserController::class, "index"]);
+
+Route::post('/auth/register', [AuthController::class, 'registerUser']);
+Route::post('/auth/login', [AuthController::class, 'loginUser']);
+
+// Route::apiResource('/listings', [ListingController::class, "index"])->middleware('auth:sanctum');
+
+Route::group(['middleware' => ['auth:sanctum']], function() {
+    Route::get('/listings', [ListingController::class, "index"]);
+    Route::get('/listings/{id}', [ListingController::class, 'show']);
+    Route::post('/listings', [ListingController::class, 'store']);
+    Route::post('/listings/{id}', [ListingController::class, 'update']);
+    Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
+
+
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::post('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
 });
 
-Route::get('/listings', [ListingController::class, "index"]);
-Route::get('/listings/{id}', [ListingController::class, 'show']);
-Route::post('/listings', [ListingController::class, 'store']);
-Route::post('/listings/{id}', [ListingController::class, 'update']);
-Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
+
