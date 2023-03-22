@@ -18,22 +18,16 @@ use App\Http\Controllers\UserController;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/listings', [ListingController::class, "index"]);
-    Route::get('/listings/{id}', [ListingController::class, 'show']);
-    Route::post('/listings', [ListingController::class, 'store']);
-    Route::post('/listings/{id}', [ListingController::class, 'update']);
-    Route::delete('/listings/{id}', [ListingController::class, 'destroy']);
-
-    Route::get('/users/{id}', [UserController::class, 'show']);
-    Route::post('/users/{id}', [UserController::class, 'update']);
-    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+    Route::resource('listings', ListingController::class)->except(['edit']);
+    Route::resource('users', UserController::class)
+        ->only(['show', 'update', 'destroy']);
 
     Route::post('/auth/logout', [AuthController::class, 'logoutUser']);
 });
 
+Route::prefix('auth')->name('auth.')->group(function () {
+    Route::post('/register', [AuthController::class, 'registerUser'])->name('register');
+    Route::post('/login', [AuthController::class, 'loginUser'])->name('login');
+});
+
 Route::get('/users', [UserController::class, "index"]);
-
-Route::post('/auth/register', [AuthController::class, 'registerUser']);
-Route::post('/auth/login', [AuthController::class, 'loginUser']);
-
-
