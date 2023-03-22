@@ -46,6 +46,11 @@ class User extends Authenticatable
         return $this->hasMany(Listing::class);
     }
 
+    public function getUuidAttribute($value)
+    {
+        return (string) $value;
+    }
+
     /**
      * The attributes that should be cast.
      *
