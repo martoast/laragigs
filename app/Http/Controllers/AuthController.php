@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -22,8 +23,7 @@ class AuthController extends Controller
                 ->letters()
                 ->mixedCase()
                 ->numbers()
-                ->symbols()
-                ->uncompromised()],
+                ->symbols()],
         ];
         $messages = [
             'name.required' => 'The name field is required.',
@@ -73,7 +73,7 @@ class AuthController extends Controller
             if(!Auth::attempt($request->only(['email', 'password']))){
                 return response()->json([
                     'status' => false,
-                    'message' => 'Email & Password does not match with our records.',
+                    'message' => 'Invalid credentials.',
                 ], 401);
             }
 
@@ -93,12 +93,21 @@ class AuthController extends Controller
         }
     }
     public function logoutUser(Request $request)
-{
-    $request->user()->tokens()->where('id', $request->user()->currentAccessToken()->id)->delete();
+    {
+        $request->user()->tokens()->where('id', $request->user()->currentAccessToken()->id)->delete();
  
-    return response()->json([
-        'status' => true,
-        'message' => 'User logged out successfully',
-    ], 200);
-}
+        return response()->json([
+            'status' => true,
+            'message' => 'User logged out successfully',
+        ], 200);
+    }
+/**
+     * Get the authenticated User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function user()
+    {
+        return new UserResource(Auth::user());
+    }
 }
