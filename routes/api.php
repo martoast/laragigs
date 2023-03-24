@@ -18,7 +18,7 @@ use App\Http\Controllers\UserController;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::apiResource('listings', ListingController::class);
+    Route::apiResource('listings', ListingController::class)->only(['store', 'update', 'destroy']);
     Route::apiResource('users', UserController::class)->only(['show', 'update', 'destroy']);
     
     Route::prefix('auth')->group(function () {
@@ -27,7 +27,12 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+
+
 Route::get('/users', [UserController::class, "index"]);
+
+Route::get('listings', [ListingController::class,'index']);
+Route::get('listings/{id}', [ListingController::class, 'show']);
 
 Route::post('/auth/register', [AuthController::class, 'registerUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
