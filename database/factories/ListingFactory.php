@@ -12,13 +12,14 @@ class ListingFactory extends Factory
 
     public function definition()
     {
-        $image = $this->faker->image('public/storage/listings', 640, 480, null, false);
+        $image = $this->faker->image('public/storage/images', 640, 480, null, false);
 
         return [
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->paragraph(3),
             'salary' => $this->faker->sentence(4),
-            'image' => 'listings/' . basename($image),
+            'email' => $this->faker->unique()->safeEmail,
+            'image' => 'images/' . basename($image),
         ];
     }
 

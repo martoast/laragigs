@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class ListingController extends Controller
 {
@@ -20,6 +21,7 @@ class ListingController extends Controller
             'title' => 'required',
             'description' => 'required',
             'salary' => 'required',
+            'email' => 'required|email',
             'image' => 'nullable|image|max:2048'
         ];
     
@@ -27,6 +29,7 @@ class ListingController extends Controller
             'title.required' => 'The title field is required.',
             'description.required' => 'The description field is required.',
             'salary.required' => 'The salary field is required.',
+            'email.required' => 'The contact email field is required.',
             'image.max' => 'The image may not be greater than 2 MB.',
             'image.image' => 'The file must be an image.',
         ];
@@ -44,11 +47,14 @@ class ListingController extends Controller
         $listing->title = $request->title;
         $listing->description = $request->description;
         $listing->salary = $request->salary;
+        $listing->email = $request->email;
     
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $listing->setImageAttribute($image);
-        }
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $path = $image->storeAs('images', $filename, 's3');
+            $listing->image = $path;
+        }        
     
         $listing->save();
     
@@ -73,6 +79,7 @@ class ListingController extends Controller
             'title' => 'sometimes|required',
             'description' => 'sometimes|required',
             'salary' => 'sometimes|required',
+            'email' => 'sometimes|required|email',
             'image' => 'sometimes|image|max:2048',
         ];
 
@@ -80,6 +87,7 @@ class ListingController extends Controller
             'title.required' => 'The title field is required.',
             'description.required' => 'The description field is required.',
             'salary.required' => 'The salary field is required.',
+            'email.required' => 'The contact email field is required.',
             'image.max' => 'The image may not be greater than 2 MB.',
             'image.image' => 'The file must be an image.',
         ];
@@ -95,11 +103,14 @@ class ListingController extends Controller
         $listing->title = $request->title;
         $listing->description = $request->description;
         $listing->salary = $request->salary;
-    
+        $listing->email = $request->email;
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $listing->setImageAttribute($image);
-        }
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $path = $image->storeAs('images', $filename, 's3');
+            $listing->image = $path;
+        }        
 
         $listing->save();
 
