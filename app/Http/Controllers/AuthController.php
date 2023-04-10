@@ -43,12 +43,13 @@ class AuthController extends Controller
         $user = new User();
         $user->name = $request->input('name');
         $user->email = $request->input('email');
-        $user->password = bcrypt($request->input('password'));
+        $user->password = Hash::make($request->input('password'));
         $user->save();
 
         return response()->json([
             'status' => true,
             'message' => 'User Registered Successfully',
+            'token_type' => 'bearer',
             'access_token' => $user->createToken("API TOKEN")->plainTextToken
         ], 200);
     }

@@ -15,12 +15,14 @@ class Listing extends Model
         'title',
         'description',
         'salary',
+        'email'
     ];
 
     protected $rules = [
         'title' => 'required|string|max:255',
         'description' => 'required|string',
         'salary' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
         'image' => 'nullable|string'
     ];
 
@@ -37,8 +39,8 @@ class Listing extends Model
     } else if ($image instanceof UploadedFile) {
         // image is an instance of UploadedFile (probably from store method)
         $filename = time() . '_' . $image->getClientOriginalName();
-        $path = 'public/storage/listings/' . $filename;
-        Storage::putFileAs('public/storage/listings', $image, $filename);
+        $path = 'public/storage/images/' . $filename;
+        Storage::putFileAs('public/storage/images', $image, $filename);
         $this->attributes['image'] = $path;
     }
 }

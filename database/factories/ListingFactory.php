@@ -12,21 +12,12 @@ class ListingFactory extends Factory
 
     public function definition()
     {
-        $image = $this->faker->image('public/storage/listings', 640, 480, null, false);
-
         return [
             'title' => $this->faker->sentence(4),
             'description' => $this->faker->paragraph(3),
             'salary' => $this->faker->sentence(4),
-            'image' => 'listings/' . basename($image),
+            'email' => $this->faker->unique()->safeEmail,
+            'image' => 'https://laragigs.s3.us-west-1.amazonaws.com/default.png',
         ];
     }
-
-    public function configure()
-{
-    return $this->afterCreating(function (Listing $listing) {
-        $listing->setImageAttribute(Storage::url($listing->image));
-        $listing->save();
-    });
-}
 }
