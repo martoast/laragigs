@@ -22,7 +22,9 @@ class ListingController extends Controller
             'description' => 'required',
             'salary' => 'required',
             'email' => 'required|email',
-            'image' => 'nullable|image|max:2048'
+            'image' => 'nullable|image|max:2048',
+            'tags' => 'nullable|array',
+            'tags.*' => 'string|max:255'
         ];
     
         $messages = [
@@ -32,6 +34,8 @@ class ListingController extends Controller
             'email.required' => 'The contact email field is required.',
             'image.max' => 'The image may not be greater than 2 MB.',
             'image.image' => 'The file must be an image.',
+            'tags.*.string' => 'The tag must be a string.',
+            'tags.*.max' => 'The tag may not be greater than :max characters.'
         ];
     
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -48,6 +52,10 @@ class ListingController extends Controller
         $listing->description = $request->description;
         $listing->salary = $request->salary;
         $listing->email = $request->email;
+        
+        if ($request->has('tags')) {
+            $listing->tags = $request->tags;
+        }    
     
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -83,6 +91,8 @@ class ListingController extends Controller
             'salary' => 'sometimes|required',
             'email' => 'sometimes|required|email',
             'image' => 'sometimes|image|max:2048',
+            'tags' => 'sometimes|array',
+            'tags.*' => 'string|max:255'
         ];
 
         $messages = [
@@ -92,6 +102,8 @@ class ListingController extends Controller
             'email.required' => 'The contact email field is required.',
             'image.max' => 'The image may not be greater than 2 MB.',
             'image.image' => 'The file must be an image.',
+            'tags.*.string' => 'The tag must be a string.',
+            'tags.*.max' => 'The tag may not be greater than :max characters.'
         ];
     
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -106,6 +118,10 @@ class ListingController extends Controller
         $listing->description = $request->description;
         $listing->salary = $request->salary;
         $listing->email = $request->email;
+        
+        if ($request->has('tags')) {
+            $listing->tags = $request->tags;
+        }    
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');

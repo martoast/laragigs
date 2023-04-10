@@ -15,15 +15,22 @@ class Listing extends Model
         'title',
         'description',
         'salary',
-        'email'
+        'email',
+        'tags'
     ];
 
+    protected $casts = [
+        'tags' => 'array',
+    ];
+    
     protected $rules = [
         'title' => 'required|string|max:255',
         'description' => 'required|string',
         'salary' => 'required|string|max:255',
         'email' => 'required|email|max:255',
-        'image' => 'nullable|string'
+        'image' => 'nullable|string',
+        'tags' => 'nullable|array',
+        'tags.*' => 'nullable|string|max:255'
     ];
 
     public function user()
@@ -31,18 +38,5 @@ class Listing extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function setImageAttribute($image)
-{
-    if (is_string($image)) {
-        // image is already a string (probably from factory)
-        $this->attributes['image'] = $image;
-    } else if ($image instanceof UploadedFile) {
-        // image is an instance of UploadedFile (probably from store method)
-        $filename = time() . '_' . $image->getClientOriginalName();
-        $path = 'public/storage/images/' . $filename;
-        Storage::putFileAs('public/storage/images', $image, $filename);
-        $this->attributes['image'] = $path;
-    }
-}
 
 }
