@@ -54,7 +54,9 @@ class ListingController extends Controller
             $filename = time() . '_' . $image->getClientOriginalName();
             $path = $image->storeAs('images', $filename, 's3');
             $listing->image = $path;
-        }        
+        } else {
+            $listing->image = "https://laragigs.s3.us-west-1.amazonaws.com/default.png";
+        }    
     
         $listing->save();
     
