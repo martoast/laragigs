@@ -18,6 +18,7 @@ class ListingFactory extends Factory
             'salary' => $this->faker->sentence(4),
             'email' => $this->faker->unique()->safeEmail,
             'image' => 'https://laragigs.s3.us-west-1.amazonaws.com/default.png',
+            'tags' => ['backend', 'laravel', 'php'],
         ];
     }
 }
