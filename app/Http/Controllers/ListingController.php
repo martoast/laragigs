@@ -102,6 +102,7 @@ class ListingController extends Controller
             'description.required' => 'The description field is required.',
             'salary.required' => 'The salary field is required.',
             'email.required' => 'The contact email field is required.',
+            'email.email' => 'The contact email field must be a valid email.',
             'image.max' => 'The image may not be greater than 2 MB.',
             'image.image' => 'The file must be an image.',
             'tags.*.string' => 'The tag must be a string.',
@@ -124,13 +125,15 @@ class ListingController extends Controller
         if ($request->has('tags')) {
             $listing->tags = $request->tags;
         }    
-
+    
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $filename = time() . '_' . $image->getClientOriginalName();
             $path = $image->storeAs('images', $filename, 's3');
-            $listing->image = $path;
-        }        
+            $listing->image = $listing->image = 'https://laragigs.s3.us-west-1.amazonaws.com/' . $path;
+        } else {
+            $listing->image = "https://laragigs.s3.us-west-1.amazonaws.com/default.png";
+        }         
 
         $listing->save();
 
